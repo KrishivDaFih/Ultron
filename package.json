@@ -1,0 +1,57 @@
+{
+  "name": "ultron",
+  "productName": "Ultron",
+  "version": "1.0.1",
+  "description": "ULTRON \u2014 Sentinel Core assistant console",
+  "author": "Kris",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis --x64"
+  },
+  "devDependencies": {
+    "electron": "31.7.7",
+    "electron-builder": "24.13.3"
+  },
+  "build": {
+    "appId": "com.kris.ultron",
+    "productName": "Ultron",
+    "copyright": "Ultron \u2014 Sentinel Core",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "build/icon.ico",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "Ultron-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Ultron",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "installerSidebar": "build/sidebar.bmp",
+      "uninstallerSidebar": "build/sidebar.bmp",
+      "installerHeader": "build/header.bmp",
+      "deleteAppDataOnUninstall": false
+    }
+  }
+}
