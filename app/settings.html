@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
+<title>Settings</title>
+<style>
+:root{--bg:#0b0d12;--panel:#12151c;--line:#2a2f3a;--field:#5b6372;--ink:#e7eaf0;--ink2:#9aa2b1;--fill:#3b6cf0;--on:#fff;--focus:#8fb0ff;--danger:#ff8a80;--ok:#7ee0a8;--font:system-ui,-apple-system,"Segoe UI",sans-serif;--r:10px;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:400 14.5px/1.5 var(--font)}
+main{padding:22px 24px 90px;max-width:560px}
+h1{font-size:19px;margin:0 0 4px}
+.lede{color:var(--ink2);margin:0 0 18px;font-size:13.5px}
+fieldset{border:0;padding:0;margin:0 0 18px}
+legend,label.l{display:block;font-weight:600;font-size:13.5px;margin-bottom:6px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}
+.seg label{position:relative;display:block}
+.seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.seg span{display:block;text-align:center;padding:8px;border-radius:calc(var(--r) - 3px);color:var(--ink2);font-weight:500}
+.seg input:checked+span{background:var(--bg);color:var(--ink);box-shadow:inset 0 0 0 1px var(--field)}
+.seg input:focus-visible+span{outline:2px solid var(--focus);outline-offset:1px}
+.f{margin-bottom:14px}
+input[type=text],input[type=password]{width:100%;min-height:42px;padding:9px 12px;font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--field);border-radius:var(--r);outline:none}
+input[type=text]:focus,input[type=password]:focus{border-color:var(--focus);box-shadow:0 0 0 1px var(--focus)}
+.hint{font-size:12.5px;color:var(--ink2);margin:5px 0 0}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row input{flex:1}
+button{font:inherit;cursor:pointer;min-height:42px;padding:0 16px;border-radius:var(--r);border:1px solid var(--field);background:transparent;color:var(--ink);font-weight:600}
+button:hover{background:var(--panel)}
+button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.primary{background:var(--fill);border-color:var(--fill);color:var(--on)}
+.status{font-size:13px;margin:0}
+.status.ok{color:var(--ok)}.status.bad{color:var(--danger)}
+.pill{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;border:1px solid var(--field);color:var(--ink2);margin-left:6px;font-weight:500}
+footer{position:fixed;left:0;right:0;bottom:0;padding:14px 24px;background:var(--bg);border-top:1px solid var(--line);display:flex;gap:10px;align-items:center}
+footer .sp{flex:1}
+a{color:var(--focus)}
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title">Settings</h1>
+  <p class="lede">Choose which AI answers you and add your own API key. Keys stay on this computer and are only sent to the provider they belong to.</p>
+
+  <fieldset>
+    <legend>AI provider</legend>
+    <div class="seg" id="prov" role="radiogroup" aria-label="AI provider"></div>
+  </fieldset>
+
+  <div id="pv"></div>
+
+  <div class="f">
+    <label class="l" for="hk">Show or hide shortcut</label>
+    <input type="text" id="hk" spellcheck="false" aria-describedby="hk-h">
+    <p class="hint" id="hk-h">Works from anywhere in Windows. Example: Control+Shift+J. Leave empty to turn it off.</p>
+  </div>
+  <p class="hint" id="enc"></p>
+</main>
+<footer>
+  <p class="status" id="msg" role="status" aria-live="polite"></p><span class="sp"></span>
+  <button type="button" id="cancel">Close</button>
+  <button type="button" class="primary" id="save">Save</button>
+</footer>
+<script>
+(async function(){
+  const $=s=>document.querySelector(s);
+  const info=await desk.info(); const s=await desk.getSettings();
+  const t=info.theme||{}; for(const k in t) document.documentElement.style.setProperty('--'+k,t[k]);
+  document.title=info.name+' settings'; $('#title').textContent=info.name+' settings';
+  const LINKS={anthropic:'https://console.anthropic.com/settings/keys',openai:'https://platform.openai.com/api-keys',groq:'https://console.groq.com/keys'};
+  let prov=s.provider;
+  const seg=$('#prov');
+  Object.keys(s.providers).forEach(k=>{
+    const l=document.createElement('label');
+    l.innerHTML=`<input type="radio" name="prov" value="${k}" ${k===prov?'checked':''}><span>${s.providers[k].label}</span>`;
+    l.querySelector('input').onchange=()=>{prov=k;paint();};
+    seg.append(l);
+  });
+  const pv=$('#pv');
+  Object.keys(s.providers).forEach(k=>{
+    const P=s.providers[k], m=s.models[k]||{};
+    const d=document.createElement('section'); d.dataset.p=k;
+    d.innerHTML=`<div class="f"><label class="l" for="key-${k}">${P.label} API key ${s.hasKey[k]?'<span class="pill">Saved</span>':''}</label>
+      <div class="row"><input type="password" id="key-${k}" autocomplete="off" spellcheck="false" aria-describedby="key-${k}-h" placeholder="${s.hasKey[k]?'Leave blank to keep the saved key':'Paste your key'}">
+      ${s.hasKey[k]?`<button type="button" data-clear="${k}">Remove key</button>`:''}</div>
+      <p class="hint" id="key-${k}-h">Get one at <a href="${LINKS[k]}" target="_blank" rel="noopener">${LINKS[k].replace('https://','')}</a>. Usage is billed by ${P.label} to you.</p></div>
+      <div class="f"><label class="l" for="main-${k}">Main model</label><input type="text" id="main-${k}" value="${m.main||P.main}" spellcheck="false"></div>
+      <div class="f"><label class="l" for="quick-${k}">Fast model</label><input type="text" id="quick-${k}" value="${m.quick||P.quick}" spellcheck="false" aria-describedby="quick-${k}-h">
+      <p class="hint" id="quick-${k}-h">Used for quick jobs like memory. Model names are editable, so you can switch when newer ones come out.</p></div>`;
+    pv.append(d);
+  });
+  const clears={};
+  pv.addEventListener('click',e=>{const b=e.target.closest('[data-clear]');if(!b)return;clears[b.dataset.clear]=true;b.textContent='Will be removed';b.disabled=true;});
+  function paint(){pv.querySelectorAll('section').forEach(x=>x.hidden=x.dataset.p!==prov);}
+  paint();
+  $('#hk').value=s.hotkey||'';
+  $('#enc').textContent=s.encrypted?'API keys are encrypted with Windows\u2019 built-in data protection.':'This system can\u2019t encrypt keys, so they\u2019re stored encoded but not encrypted. Keep this PC\u2019s account private.';
+  async function save(){
+    const n={provider:prov,keys:{},models:{},hotkey:$('#hk').value.trim()};
+    Object.keys(s.providers).forEach(k=>{
+      const v=$('#key-'+k).value.trim(); n.keys[k]=clears[k]?'__clear__':v;
+      n.models[k]={main:$('#main-'+k).value.trim(),quick:$('#quick-'+k).value.trim()};
+    });
+    const r=await desk.setSettings(n); const m=$('#msg');
+    if(r.ok){ m.className='status ok'; m.textContent='Saved.'; setTimeout(()=>desk.closeSelf(),600); }
+    else { m.className='status bad'; m.textContent=r.error; $('#hk').focus(); }
+  }
+  $('#save').onclick=save; $('#cancel').onclick=()=>desk.closeSelf();
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') desk.closeSelf(); if(e.key==='Enter'&&e.target.tagName==='INPUT'){e.preventDefault();save();} });
+  const first=$('#key-'+prov); if(first) first.focus();
+})();
+</script>
+</body>
+</html>

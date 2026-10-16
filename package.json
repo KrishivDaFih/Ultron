@@ -1,31 +1,25 @@
 {
-  "name": "ultron",
-  "productName": "Ultron",
-  "version": "1.0.1",
-  "description": "ULTRON \u2014 Sentinel Core assistant console",
+  "name": "ultron-desktop",
+  "productName": "ULTRON",
+  "version": "1.1.1",
+  "description": "ULTRON AI assistant",
   "author": "Kris",
-  "main": "src/main/main.js",
-  "scripts": {
-    "start": "electron .",
-    "dist": "electron-builder --win nsis --x64"
-  },
+  "main": "main.js",
+  "private": true,
   "devDependencies": {
-    "electron": "31.7.7",
-    "electron-builder": "24.13.3"
+    "electron": "44.5.1",
+    "electron-builder": "26.0.12"
   },
   "build": {
-    "appId": "com.kris.ultron",
-    "productName": "Ultron",
-    "copyright": "Ultron \u2014 Sentinel Core",
+    "appId": "com.kris.ultron.desktop",
+    "productName": "ULTRON",
+    "copyright": "Copyright (c) 2026 Kris. Personal, non-commercial project.",
+    "electronVersion": "44.5.1",
     "directories": {
+      "app": "app",
       "output": "dist",
       "buildResources": "build"
     },
-    "files": [
-      "src/**/*",
-      "build/icon.ico",
-      "package.json"
-    ],
     "win": {
       "target": [
         {
@@ -36,7 +30,8 @@
         }
       ],
       "icon": "build/icon.ico",
-      "artifactName": "Ultron-Setup-${version}.${ext}"
+      "artifactName": "ULTRON-Setup-${version}.${ext}",
+      "signAndEditExecutable": true
     },
     "nsis": {
       "oneClick": false,
@@ -44,14 +39,13 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Ultron",
+      "shortcutName": "ULTRON",
+      "license": "build/license.txt",
       "installerIcon": "build/icon.ico",
       "uninstallerIcon": "build/icon.ico",
       "installerHeaderIcon": "build/icon.ico",
-      "installerSidebar": "build/sidebar.bmp",
-      "uninstallerSidebar": "build/sidebar.bmp",
-      "installerHeader": "build/header.bmp",
       "deleteAppDataOnUninstall": false
-    }
+    },
+    "publish": null
   }
 }

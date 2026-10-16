@@ -1,0 +1,8 @@
+{
+  "name": "ultron-desktop",
+  "productName": "ULTRON",
+  "version": "1.1.1",
+  "description": "ULTRON AI assistant",
+  "author": "Kris",
+  "main": "main.js"
+}

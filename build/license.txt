@@ -1,0 +1,28 @@
+ULTRON - Terms and privacy summary
+Last updated 6 October 2026
+
+ULTRON is a free, personal, non-commercial project made by Kris, an independent student developer in India.
+
+PRIVACY
+- The developer receives none of your data. There are no analytics, ads or trackers.
+- Your account, chats and settings are stored on this PC, in the app's data folder.
+- Passwords are stored only as a salted one-way hash (PBKDF2-SHA-256).
+- Your messages are sent directly to the AI provider you choose (Anthropic, OpenAI or Groq) using your own API key. That provider's privacy policy applies.
+- API keys are encrypted with Windows data protection where available.
+- You can download or permanently delete your data at any time from Account & privacy inside the app.
+
+AGE
+You must be at least 13. Under-18s need a parent or guardian's consent, as India's Digital Personal Data Protection Act, 2023 requires.
+
+TERMS
+- The app is provided free and as is. There are no purchases, subscriptions or hidden fees.
+- AI usage is billed by your chosen provider to your own API key.
+- AI replies can be wrong. Check anything important yourself and don't rely on the app for medical, legal, financial or safety decisions.
+- Don't use the app for anything illegal or harmful, or against your AI provider's usage policies.
+- What you write is yours.
+- To the extent the law allows, the developer isn't liable for losses from using the app, including lost data.
+- These terms are governed by the laws of India.
+
+The names Jarvis, Vision, Ultron and E.V. refer to Marvel characters. This is an unofficial fan project, not affiliated with or endorsed by Marvel, Disney or Anthropic.
+
+The full privacy policy, terms, refund policy, cookie and storage policy, accessibility statement and licences are inside the app under Account & privacy.
